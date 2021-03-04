@@ -24,8 +24,8 @@ class TourKotlinApplication{
 				true, 5, 3500.00)
 		)
 	}
-	//only one line and return
-	//Bean, when application initialize will be able in all class
+	//only one line and return, we can put with equal like a variable
+	//Bean, when application initialize will be able in all classes, do not necessary put the word new
 	@Bean
 	fun promotions() = ConcurrentHashMap<Long, Promotion>(initialPromotions.associateBy(Promotion::id))
 }

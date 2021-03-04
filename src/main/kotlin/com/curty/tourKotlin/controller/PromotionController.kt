@@ -13,7 +13,7 @@ class PromotionController {
 
     //Dependency injection
     //lateinit initialize after
-    //AutoWired inject the promotions object
+    //AutoWired inject the promotions object, reference on the same name of function promotions in TourKotlinApplication
     @Autowired
     lateinit var promotions: ConcurrentHashMap<Long, Promotion>
 
