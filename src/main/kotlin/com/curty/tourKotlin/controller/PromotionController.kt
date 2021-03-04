@@ -2,9 +2,7 @@ package com.curty.tourKotlin.controller
 
 import com.curty.tourKotlin.model.Promotion
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.util.concurrent.ConcurrentHashMap
 
 //Dependência vem no Spring web
@@ -27,5 +25,14 @@ class PromotionController {
     }
 
     @RequestMapping(value = ["/promotions"], method = arrayOf(RequestMethod.GET))
-    fun getPromotion() = promotions[3]
+    fun getAll() = promotions
+
+    @RequestMapping(value = ["/promotion/{id}"], method = arrayOf(RequestMethod.GET))
+    fun getById(@PathVariable id: Long) = promotions[id]
+
+    @RequestMapping(value = ["/promotion"], method = arrayOf(RequestMethod.POST))
+    fun create(@RequestBody promotion: Promotion){
+        promotions[promotion.id] = promotion
+    }
+
 }
