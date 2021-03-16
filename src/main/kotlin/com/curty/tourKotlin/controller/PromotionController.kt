@@ -24,15 +24,37 @@ class PromotionController {
         return "Hello";
     }
 
-    @RequestMapping(value = ["/promotions"], method = arrayOf(RequestMethod.GET))
-    fun getAll() = promotions
+    //functional programing
+    //same name of variable in URL localhost:8080/promotions?localFilter=Gramado
+    //@RequestMapping(value = ["/promotions"], method = arrayOf(RequestMethod.GET))
+    @GetMapping("/promotions")
+    fun getAll(@RequestParam(required = false, defaultValue = "") localFilter: String) =
+        promotions.filter {
+            it.value.local.contains(localFilter, true)
+        }.map (Map.Entry<Long, Promotion>::value).toList()
+        //return all list when default value is empty
+        //promotions.entries
 
-    @RequestMapping(value = ["/promotion/{id}"], method = arrayOf(RequestMethod.GET))
+    //@RequestMapping(value = ["/promotion/{id}"], method = arrayOf(RequestMethod.GET))
+    @GetMapping("/promotion/{id}")
     fun getById(@PathVariable id: Long) = promotions[id]
 
-    @RequestMapping(value = ["/promotion"], method = arrayOf(RequestMethod.POST))
+    //@RequestMapping(value = ["/promotion"], method = arrayOf(RequestMethod.POST))
+    @PostMapping("/promotion")
     fun create(@RequestBody promotion: Promotion){
         promotions[promotion.id] = promotion
     }
 
+    //@RequestMapping(value = ["promotion/{id}"], method = arrayOf(RequestMethod.DELETE))
+    @DeleteMapping("promotion/{id}")
+    fun delete(@PathVariable id: Long){
+        promotions.remove(id)
+    }
+
+    //@RequestMapping(value = ["promotion/{id}"], method = arrayOf(RequestMethod.PUT))
+    @PutMapping("promotion/{id}")
+    fun update(@PathVariable id: Long, @RequestBody promotion: Promotion){
+        promotions.remove(id)
+        promotions[id] = promotion
+    }
 }
