@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 //Dependência vem no Spring web
 @RestController
+@RequestMapping(value = ["/promotion"])
 class PromotionController {
 
     //Dependency injection
@@ -36,23 +37,23 @@ class PromotionController {
         //promotions.entries
 
     //@RequestMapping(value = ["/promotion/{id}"], method = arrayOf(RequestMethod.GET))
-    @GetMapping("/promotion/{id}")
+    @GetMapping("/{id}")
     fun getById(@PathVariable id: Long) = promotions[id]
 
     //@RequestMapping(value = ["/promotion"], method = arrayOf(RequestMethod.POST))
-    @PostMapping("/promotion")
+    @PostMapping()
     fun create(@RequestBody promotion: Promotion){
         promotions[promotion.id] = promotion
     }
 
     //@RequestMapping(value = ["promotion/{id}"], method = arrayOf(RequestMethod.DELETE))
-    @DeleteMapping("promotion/{id}")
+    @DeleteMapping("/{id}")
     fun delete(@PathVariable id: Long){
         promotions.remove(id)
     }
 
     //@RequestMapping(value = ["promotion/{id}"], method = arrayOf(RequestMethod.PUT))
-    @PutMapping("promotion/{id}")
+    @PutMapping("/{id}")
     fun update(@PathVariable id: Long, @RequestBody promotion: Promotion){
         promotions.remove(id)
         promotions[id] = promotion
