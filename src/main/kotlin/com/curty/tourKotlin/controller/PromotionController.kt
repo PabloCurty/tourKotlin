@@ -1,6 +1,7 @@
 package com.curty.tourKotlin.controller
 
 import com.curty.tourKotlin.model.Promotion
+import com.curty.tourKotlin.service.PromotionService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import java.util.concurrent.ConcurrentHashMap
@@ -13,8 +14,11 @@ class PromotionController {
     //Dependency injection
     //lateinit initialize after
     //AutoWired inject the promotions object, reference on the same name of function promotions in TourKotlinApplication
+    //@Autowired
+    //lateinit var promotions: ConcurrentHashMap<Long, Promotion>
+
     @Autowired
-    lateinit var promotions: ConcurrentHashMap<Long, Promotion>
+    lateinit var promotionService: PromotionService
 
     //Kotlin -> No methods, only function
     //if I don`t say the return type and no return, they return void
@@ -30,32 +34,22 @@ class PromotionController {
     //@RequestMapping(value = ["/promotions"], method = arrayOf(RequestMethod.GET))
     @GetMapping("/promotions")
     fun getAll(@RequestParam(required = false, defaultValue = "") localFilter: String) =
-        promotions.filter {
-            it.value.local.contains(localFilter, true)
-        }.map (Map.Entry<Long, Promotion>::value).toList()
-        //return all list when default value is empty
-        //promotions.entries
+        promotionService.searchByLocal(localFilter)
 
     //@RequestMapping(value = ["/promotion/{id}"], method = arrayOf(RequestMethod.GET))
     @GetMapping("/{id}")
-    fun getById(@PathVariable id: Long) = promotions[id]
+    fun getById(@PathVariable id: Long) = promotionService.getById(id)
 
     //@RequestMapping(value = ["/promotion"], method = arrayOf(RequestMethod.POST))
     @PostMapping()
-    fun create(@RequestBody promotion: Promotion){
-        promotions[promotion.id] = promotion
-    }
+    fun create(@RequestBody promotion: Promotion) = promotionService.create(promotion)
 
     //@RequestMapping(value = ["promotion/{id}"], method = arrayOf(RequestMethod.DELETE))
     @DeleteMapping("/{id}")
-    fun delete(@PathVariable id: Long){
-        promotions.remove(id)
-    }
+    fun delete(@PathVariable id: Long) = promotionService.delete(id)
 
     //@RequestMapping(value = ["promotion/{id}"], method = arrayOf(RequestMethod.PUT))
     @PutMapping("/{id}")
-    fun update(@PathVariable id: Long, @RequestBody promotion: Promotion){
-        promotions.remove(id)
-        promotions[id] = promotion
-    }
+    fun update(@PathVariable id: Long, @RequestBody promotion: Promotion) =
+        promotionService.update(id, promotion)
 }
