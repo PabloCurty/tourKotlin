@@ -13,5 +13,3 @@ fun main(args: Array<String>) {
 	runApplication<TourKotlinApplication>(*args)
 }
 
-//Create a hashmap to simulate a BD of promotions for now
-//[{1,{Promotion(1, name, etc...)}},{2,{Promotion(3,name2, etc...)}}, etc...]

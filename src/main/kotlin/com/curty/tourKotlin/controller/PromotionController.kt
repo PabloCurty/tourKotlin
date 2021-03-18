@@ -3,6 +3,8 @@ package com.curty.tourKotlin.controller
 import com.curty.tourKotlin.model.Promotion
 import com.curty.tourKotlin.service.PromotionService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.concurrent.ConcurrentHashMap
 
@@ -33,23 +35,50 @@ class PromotionController {
     //same name of variable in URL localhost:8080/promotions?localFilter=Gramado
     //@RequestMapping(value = ["/promotions"], method = arrayOf(RequestMethod.GET))
     @GetMapping("/promotions")
-    fun getAll(@RequestParam(required = false, defaultValue = "") localFilter: String) =
-        promotionService.searchByLocal(localFilter)
+    fun getAll(@RequestParam(required = false, defaultValue = "") localFilter: String): ResponseEntity<List<Promotion>> {
+       var promotionsList = promotionService.searchByLocal(localFilter)
+       var status = if(promotionsList.isEmpty()){
+           HttpStatus.NOT_FOUND
+       } else {
+           HttpStatus.ACCEPTED
+       }
+        return ResponseEntity(promotionsList, status)
+    }
 
     //@RequestMapping(value = ["/promotion/{id}"], method = arrayOf(RequestMethod.GET))
     @GetMapping("/{id}")
-    fun getById(@PathVariable id: Long) = promotionService.getById(id)
-
+    fun getById(@PathVariable id: Long): ResponseEntity<Promotion?> {
+        var promotion = promotionService.getById(id)
+        var status = if(promotion == null) HttpStatus.NOT_FOUND else HttpStatus.OK
+        return ResponseEntity(promotion,status)
+    }
     //@RequestMapping(value = ["/promotion"], method = arrayOf(RequestMethod.POST))
     @PostMapping()
-    fun create(@RequestBody promotion: Promotion) = promotionService.create(promotion)
+    fun create(@RequestBody promotion: Promotion): ResponseEntity<Unit> {
+        promotionService.create(promotion)
+        return ResponseEntity(Unit, HttpStatus.CREATED)
+    }
 
     //@RequestMapping(value = ["promotion/{id}"], method = arrayOf(RequestMethod.DELETE))
     @DeleteMapping("/{id}")
-    fun delete(@PathVariable id: Long) = promotionService.delete(id)
-
+    fun delete(@PathVariable id: Long): ResponseEntity<Unit> {
+        var status = if(promotionService.getById(id) == null){
+            HttpStatus.NOT_FOUND
+        } else {
+            promotionService.delete(id)
+            HttpStatus.ACCEPTED
+        }
+        return ResponseEntity(Unit,status)
+    }
     //@RequestMapping(value = ["promotion/{id}"], method = arrayOf(RequestMethod.PUT))
     @PutMapping("/{id}")
-    fun update(@PathVariable id: Long, @RequestBody promotion: Promotion) =
-        promotionService.update(id, promotion)
+    fun update(@PathVariable id: Long, @RequestBody promotion: Promotion): ResponseEntity<Unit> {
+        var status = if(promotionService.getById(id) == null) {
+            HttpStatus.NOT_FOUND
+        } else {
+            promotionService.update(id, promotion)
+            HttpStatus.ACCEPTED
+        }
+        return ResponseEntity(Unit, status)
+    }
 }

@@ -6,8 +6,10 @@ import org.springframework.stereotype.Component
 import java.util.concurrent.ConcurrentHashMap
 
 @Component
-class PromotionServiceImp: PromotionService {
+class PromotionServiceImpl: PromotionService {
 
+    //Create a hashmap to simulate a BD of promotions for now
+    //[{1,{Promotion(1, name, etc...)}},{2,{Promotion(3,name2, etc...)}}, etc...]
     companion object{
         val initialPromotions = arrayOf(
             Promotion(
