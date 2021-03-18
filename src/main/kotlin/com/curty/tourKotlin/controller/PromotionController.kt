@@ -1,11 +1,13 @@
 package com.curty.tourKotlin.controller
 
+import com.curty.tourKotlin.model.JSONResponse
 import com.curty.tourKotlin.model.Promotion
 import com.curty.tourKotlin.service.PromotionService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 //Dependência vem no Spring web
@@ -54,9 +56,10 @@ class PromotionController {
     }
     //@RequestMapping(value = ["/promotion"], method = arrayOf(RequestMethod.POST))
     @PostMapping()
-    fun create(@RequestBody promotion: Promotion): ResponseEntity<Unit> {
+    fun create(@RequestBody promotion: Promotion): ResponseEntity<JSONResponse> {
         promotionService.create(promotion)
-        return ResponseEntity(Unit, HttpStatus.CREATED)
+        var jsonResponse = JSONResponse("OK", Date())
+        return ResponseEntity(jsonResponse, HttpStatus.CREATED)
     }
 
     //@RequestMapping(value = ["promotion/{id}"], method = arrayOf(RequestMethod.DELETE))
